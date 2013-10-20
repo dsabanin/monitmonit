@@ -18,30 +18,35 @@
 
 (defn title []
   (str (:name *config*) " Service Dashboard"))
+
 (defn layout
-  [& body]
-  (html5
-   [:head
-    [:title (title)]
-    (include-js "//code.jquery.com/jquery.js"
-                "//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js")
-    (include-css "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css")]
-   [:body
-    [:div.navbar.navbar-static-top.navbar-inverse
-    {:role "navigation"}
-    [:div.container
-     [:div.navbar-header
-      [:button.navbar-toggle
-       {:data-target ".navbar-collapse",
-        :data-toggle "collapse",
-        :type "button"}
-       [:span.icon-bar]
-       [:span.icon-bar]
-       [:span.icon-bar]]
-      (control-panel)
-      [:a.navbar-brand {:href "#"} (title)]]]]
-    [:div.container
-     body]]))
+  [req & body]
+  (let [auto-refresh? (= (get-in req [:query-params :refresh]) "true")]
+    (html5
+     [:head
+      [:title (title)]
+      (include-js "//code.jquery.com/jquery.js"
+                  "//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js")
+      (include-css "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css")
+      (when auto-refresh?
+          [:meta {:content "30", :http-equiv "refresh"}])]
+     [:body
+      [:div.navbar.navbar-static-top.navbar-inverse
+       {:role "navigation"}
+       [:div.container
+        [:div.navbar-header
+         [:button.navbar-toggle
+          {:data-target ".navbar-collapse",
+           :data-toggle "collapse",
+           :type "button"}
+          [:span.icon-bar]
+          [:span.icon-bar]
+          [:span.icon-bar]]
+         (control-panel auto-refresh?)
+         [:a.navbar-brand {:href "#"} (title)]]]]
+      [:div.container
+       body]])))
+
 
 (defn monit
   [node cmd]
