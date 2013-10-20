@@ -256,4 +256,4 @@
               ;; to enable Tomcat)
               ;;::bootstrap/host "localhost"
               ::bootstrap/type :jetty
-              ::bootstrap/port 8080})
+              ::bootstrap/port (:port *config* 8080)})
