@@ -1,0 +1,4 @@
+{
+ :name "My Project"
+ :nodes ["myhost-1"
+         "myhost-2] ;; The hosts need to be configured in your ~/.ssh/config file
