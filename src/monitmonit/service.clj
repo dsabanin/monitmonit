@@ -219,14 +219,27 @@
          (mapcat (fn [nodes]
                    (vector [:div.row (map #(vector :div.col-md-4 %) nodes)])))))))
 
+(defn validate-cmd
+  [cmd]
+  (#{"restart" "start" "stop"} cmd))
+
+(defn validate-node
+  [node]
+  ((into #{} (:nodes *config*)) node))
+
+(defn validate-process
+  [node process]
+  ((into #{} (keys (monit-summary node))) process))
+
 (defn run [req]
-  (when-let [cmd (get-in req [:query-params :cmd])]
-    (if-let [node (get-in req [:query-params :node])]
-      (if-let [process (get-in req [:query-params :process])]
+  (when-let [cmd (validate-cmd (get-in req [:query-params :cmd]))]
+    (if-let [node (validate-node (get-in req [:query-params :node]))]
+      (if-let [process (validate-process node (get-in req [:query-params :process]))]
         (prn (monit node (str cmd " " process)))
         (prn (monit node (str cmd " all"))))
-      (doseq [node (:nodes *config*)]
-        (prn (monit node (str cmd " all"))))))
+      (->> (:nodes *config*)
+           (pmap #(prn (monit % (str cmd " all"))))
+           (doall))))
   (ring-resp/redirect "/"))
 
 (defroutes routes
