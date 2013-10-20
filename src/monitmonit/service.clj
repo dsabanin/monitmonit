@@ -12,7 +12,7 @@
 (def ^:dynamic *config* (config/read-clojure "config.clj"))
 
 (defn run-off [cmd]
-  @(exec/sh ["/bin/sh" "-c" cmd] {:watchdog 10000}))
+  @(exec/sh ["/bin/sh" "-c" cmd] {:watchdog (:cmd-timeout *config*)}))
 
 (declare control-panel)
 
