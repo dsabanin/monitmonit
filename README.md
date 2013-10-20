@@ -16,7 +16,7 @@ Connects through SSH using your ~/.ssh/config settings.
 
 ## Getting Started
 
-1. Configure the config.clj file
+1. Copy the config.clj.example into config.clj and edit it
 2. Make sure that ~/.ssh/config knows about the hosts you want to monitor
 3. The user you're connecting to remote servers with should be able to run "sudo monit" without password
 4. Start the application: `lein run`
