@@ -55,6 +55,9 @@
   [node cmd]
   (ssh node (format (:monit-template *config*) cmd)))
 
+(defn uptime
+  [node]
+  (ssh node "uptime"))
 
 (defn parse-monit-summary
   [sum]
@@ -140,21 +143,23 @@
 
 (defn render-node
   [node]
-  (let [summary (monit-summary node)
+  (let [summary (future (monit-summary node))
+        uptime (future (uptime node))
         node-id (str "collapse-" node)]
-    [:div.panel {:class (if (summary-bad? summary)
+    [:div.panel {:class (if (summary-bad? @summary)
                           "panel-danger"
-                          (if (summary-off? summary)
+                          (if (summary-off? @summary)
                             "panel-default"
                             "panel-success"))}
      [:div.panel-heading [:a.accordion-toggle {:data-toggle "collapse"
                                                :data-parent "#accordion"
                                                :href (str "#" node-id)}
-                          [:h3.panel-title node
-                           (when (map? summary)
+                          [:h3.panel-title
+                           node
+                           (when (map? @summary)
                              [:span
                               " "
-                              (format "(%d)" (count summary))])]]
+                              (format "(%d)" (count @summary))])]]
       (top-button "start" (str "/run?cmd=start&node=" node) "default")
       " "
       (top-button "restart" (str "/run?cmd=restart&node=" node) "default")
@@ -162,7 +167,8 @@
       (top-button "stop" (str "/run?cmd=stop&node=" node) "default")]
      [:div.panel-collapse.collapse.out.nodes {:id node-id}
       [:div.panel-body
-       (render-summary node summary)]]]))
+       (render-summary node @summary)
+       [:div.well.small-well [:small (:out @uptime)]]]]]))
 
 (defn nav-button
   [name href]
