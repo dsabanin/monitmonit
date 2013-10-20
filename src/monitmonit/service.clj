@@ -212,12 +212,14 @@
 (defn dashboard
   [request]
   (ring-resp/response
-   (layout
-    (->> (:nodes *config*)
-         (pmap render-node)
-         (partition-all 3)
-         (mapcat (fn [nodes]
-                   (vector [:div.row (map #(vector :div.col-md-4 %) nodes)])))))))
+   (layout request
+           (->> (:nodes *config*)
+                (map #(future (render-node %)))
+                (doall)
+                (map deref)
+                (partition-all 3)
+                (mapcat (fn [nodes]
+                          (vector [:div.row (map #(vector :div.col-md-4 %) nodes)])))))))
 
 (defn validate-cmd
   [cmd]
