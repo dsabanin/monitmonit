@@ -177,10 +177,16 @@
    name])
 
 (defn control-panel
-  []
+  [auto-refresh?]
   (html (nav-button "Expand All" "javascript: $('.nodes').collapse('show');")
         " "
         (nav-button "Collapse All" "javascript: $('.nodes').collapse('hide');")
+        " "
+        (nav-button "Refresh" "/")
+        " "
+        (if auto-refresh?
+          (nav-button "Stop Auto-Refresh" "/")
+          (nav-button "Auto-Refresh" "/?refresh=true"))
         " "
         (group-action-btn "btn-success"
                           "Start All" "/run?cmd=start"
