@@ -47,10 +47,14 @@
       [:div.container
        body]])))
 
+(defn ssh
+  [node cmd]
+  (run-off (format (:ssh-template *config*) node cmd)))
 
 (defn monit
   [node cmd]
-  (run-off (format "ssh -tt %s 'sudo monit %s'" node cmd)))
+  (ssh node (format (:monit-template *config*) cmd)))
+
 
 (defn parse-monit-summary
   [sum]
