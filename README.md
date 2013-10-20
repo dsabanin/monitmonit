@@ -1,7 +1,7 @@
 # monitmonit
 
-A service to monitor and control servers running monit.
-Allows you to see the state of services at a glance.
+Dashboard to monitor and control services managed by monit across servers.
+
 Connects through SSH using your ~/.ssh/config settings.
 
 ## Screenshots
