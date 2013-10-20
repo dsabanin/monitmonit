@@ -75,13 +75,15 @@
       exc)))
 
 (def bad-states #{"does not exist"
-                  "execution failed"})
+                  "execution failed"
+                  "execution failed - restart pending"
+                  "execution failed - start pending"})
 (def good-states #{"running"})
 
 (def off-states #{"initializing"
                   "not monitored"
                   "running - stop pending"
-                  "execution failed - start pending"})
+                  "running - restart pending"})
 
 (defn summary-in
   [summary group]
