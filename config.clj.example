@@ -1,4 +1,9 @@
 {
  :name "My Project"
  :nodes ["myhost-1"
-         "myhost-2] ;; The hosts need to be configured in your ~/.ssh/config file
+         "myhost-2"] ;; The names need to be configured in your ~/.ssh/config file
+ :port 9090
+ :cmd-timeout 10000 ;; Time any command may take
+ :ssh-template "ssh -tt %s '%s'" ;; two args: node and command we'll be running
+ :monit-template "sudo monit %s" ;; one arg: monit command
+}
