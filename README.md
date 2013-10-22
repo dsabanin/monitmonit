@@ -1,18 +1,10 @@
 # monitmonit
 
-Dashboard to monitor and control services managed by monit across servers.
+Simple dashboard to monitor and control services managed by monit across servers.
 
 Connects through SSH using your ~/.ssh/config settings.
 
-## Screenshots
-
-### Dashboard
-
-<img width="500" src="http://f.cl.ly/items/3F0s2i1b0Y2w2a2T1H2l/monitmonit-dashboard.png" />
-
-### Details
-
-<img width="300" src="http://f.cl.ly/items/40230k0c3F2Z0K112V0n/monitmonit-details.png" />
+<img width="600" src="http://f.cl.ly/items/3n2X0U2w1Q1e3K2q0v2d/monitmonit.png" />
 
 ## Requirements
 
