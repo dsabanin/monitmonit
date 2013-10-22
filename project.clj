@@ -28,4 +28,4 @@
                             (clojure.stacktrace/print-stack-trace t)
                             (println)))
                   :welcome (println "Welcome to pedestal-service! Run (tools-help) to see a list of useful functions.")}
-  :main ^{:skip-aot true} monitmonit.server)
+  :main monitmonit.server)
