@@ -1,7 +1,10 @@
 {
  :name "My Project"
- :nodes ["myhost-1"
-         "myhost-2"] ;; The names need to be configured in your ~/.ssh/config file
+ :nodes ["Web" ["myhost-1"
+                "myhost-2"]
+         "File" ["ftp-1"
+                 "ftp-2"]] ;; The names need to be configured in your ~/.ssh/config file
+ :host "127.0.0.1"
  :port 9090
  :cmd-timeout 10000 ;; Time any command may take
  :ssh-template "ssh -tt %s '%s'" ;; two args: node and command we'll be running
