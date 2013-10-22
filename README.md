@@ -27,4 +27,6 @@ Connects through SSH using your `~/.ssh/config` settings.
 2. Make sure `sudo monit` command running on your nodes doesn't ask for password.
 3. If you don't require `sudo` to run monit command, change the `monit-template` config parameter.
 
+---
+
 <img width="744" src="http://cdn.meme.li/i/p8atj.jpg" />
