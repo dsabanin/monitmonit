@@ -1,4 +1,4 @@
-(defproject monitmonit "1.0.0-SNAPSHOT"
+(defproject monitmonit "1.0.0"
   :description "Web service to monitor and control servers managed with monit."
   :url "https://github.com/dsabanin/monitmonit"
   :license {:name "Eclipse Public License"
