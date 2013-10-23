@@ -207,17 +207,17 @@
           (nav-button "Auto-Refresh" "/?refresh=true"))
         " "
         (all-action-btn "btn-success"
-                          "Start All" "/run?cmd=start"
+                          "Start All" "/run?cmd=start&all-nodes=true"
                           (str "Are you sure you want to start all servers in "
                                (:name *config*) "?"))
         " "
         (all-action-btn "btn-danger"
-                          "Stop All" "/run?cmd=stop"
+                          "Stop All" "/run?cmd=stop&all-nodes=true"
                           (str "Are you sure you want to stop all servers in "
                                (:name *config*) "?"))
         " "
         (all-action-btn "btn-danger"
-                          "Restart All" "/run?cmd=restart"
+                          "Restart All" "/run?cmd=restart&all-nodes=true"
                           (str "Are you sure you want to restart all servers in "
                                (:name *config*) "?"))))
 
@@ -270,11 +270,16 @@
 
 (defn validate-node
   [node]
-  ((into #{} (:nodes *config*)) node))
+  ((into #{} (->> (:nodes *config*)
+                  (apply hash-map)
+                  (vals)
+                  (flatten))) node))
 
 (defn validate-process
   [node process]
-  ((into #{} (keys (monit-summary node))) process))
+  (let [summary (monit-summary node)]
+    (when (map? summary)
+      ((into #{} (keys (monit-summary node))) process))))
 
 (defn monit-all
   [cmd nodes]
@@ -286,15 +291,22 @@
   (when-let [cmd (validate-cmd (get-in req [:query-params :cmd]))]
     (if-let [node (validate-node (get-in req [:query-params :node]))]
       (if-let [process (validate-process node (get-in req [:query-params :process]))]
-        (prn (monit node (str cmd " " process)))
-        (prn (monit node (str cmd " all"))))
+        (do
+          (println "monit" node cmd process)
+          (prn (monit node (str cmd " " process))))
+        (do (println "monit" node cmd "all")
+            (prn (monit node (str cmd " all"))))
+        )
       (if-let [group (get-in req [:query-params :group])]
-        (if-let [group-nodes (get (apply hash-map (:nodes *config*)) group)]
+        (when-let [group-nodes (get (apply hash-map (:nodes *config*)) group)]
+          (println "monit-all" cmd group-nodes)
           (monit-all cmd group-nodes))
-        (->> (apply hash-map (:nodes *config*))
-             (vals)
-             (flatten)
-             (monit-all cmd)))))
+        (when (get-in req [:query-params :all-nodes])
+          (println "monit-all" cmd)
+          (->> (apply hash-map (:nodes *config*))
+               (vals)
+               (flatten)
+               (monit-all cmd))))))
   (ring-resp/redirect "/"))
 
 (defroutes routes
